@@ -3,7 +3,6 @@ from pymongo import MongoClient
 import pandas as pd
 import matplotlib.pyplot as plt
 from urllib.parse import urlparse
-from bson.objectid import ObjectId
 from wordcloud import WordCloud
 import re
 import string
@@ -26,17 +25,17 @@ stopwords_indonesia = set([
 st.set_page_config(page_title="Analisis Artikel", layout="wide")
 st.title("📚 Analisis Artikel: gejala atau tanda-tanda stroke")
 
-# --- Koneksi ke MongoDB ---
-client = MongoClient("mongodb://localhost:27017/")
+# --- Koneksi ke MongoDB Atlas ---
+client = MongoClient("mongodb+srv://sagitarius:22090017@cluster0.dabaqxm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client["stroke_app"]
-collection = db["crawling"]
+collection = db["gejala_stroke"]
 
 # --- Ambil dan Proses Data ---
 data = list(collection.find())
 df = pd.DataFrame(data)
 
 if df.empty:
-    st.warning("⚠️ Tidak ada data artikel yang tersedia di database.")
+    st.warning("⚠ Tidak ada data artikel yang tersedia di database.")
     st.stop()
 
 # Rename kolom jika perlu
@@ -84,7 +83,7 @@ top5_domains = df['domain'].value_counts().head(5)
 st.bar_chart(top5_domains)
 
 # --- Word Cloud Judul Artikel ---
-st.markdown("### ☁️ Word Cloud Judul Artikel")
+st.markdown("### ☁ Word Cloud Judul Artikel")
 if df['judul'].notnull().any():
     def preprocess_text(text):
         text = text.lower()
@@ -123,10 +122,10 @@ with st.expander("Cari Artikel berdasarkan Judul Artikel"):
         if not matching_articles.empty:
             for _, article in matching_articles.iterrows():
                 st.success("✅ Ditemukan artikel:")
-                st.markdown(f"*📰 Judul:* {article.get('judul', 'Tidak tersedia')}")
-                st.markdown(f"*📅 Tanggal Rilis:* {article.get('tanggal_rilis', 'Tidak tersedia')}")
-                st.markdown(f"*📖 Konten:* {article.get('konten', 'Tidak tersedia')}")
-                st.markdown(f"*🔗 URL:* [{article.get('url', '')}]({article.get('url', '')})")
+                st.markdown(f"📰 Judul: {article.get('judul', 'Tidak tersedia')}")
+                st.markdown(f"📅 Tanggal Rilis: {article.get('tanggal_rilis', 'Tidak tersedia')}")
+                st.markdown(f"📖 Konten: {article.get('konten', 'Tidak tersedia')}")
+                st.markdown(f"🔗 URL: [{article.get('url', '')}]({article.get('url', '')})")
                 st.markdown("---")
         else:
             st.warning("❌ Tidak ditemukan artikel yang sesuai dengan kata kunci.")
