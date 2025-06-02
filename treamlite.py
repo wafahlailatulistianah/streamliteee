@@ -23,7 +23,7 @@ stopwords_indonesia = set([
 
 # --- Konfigurasi Halaman ---
 st.set_page_config(page_title="Analisis Artikel", layout="wide")
-st.title("📚 Analisis Artikel: gejala atau tanda-tanda stroke")
+st.title("📚 Visualisasi: gejala stroke")
 
 # --- Koneksi ke MongoDB Atlas ---
 client = MongoClient("mongodb+srv://sagitarius:22090017@cluster0.dabaqxm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
